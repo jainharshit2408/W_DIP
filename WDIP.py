@@ -214,14 +214,17 @@ for f in files_source:
             save_path = os.path.join(path_save_f, '%s_k'%imgname + '.png')
             out_k_np = torch_to_np(out_k_m)
             out_k_np = out_k_np.squeeze()
-            out_k_np /= np.max(out_k_np)
-            imsave(save_path, out_k_np)
+            out_k_np /= np.max(out_k_np)  # Normalize the image data to range [0, 1]
+            out_k_np_uint8 = np.clip(out_k_np * 255, 0, 255).astype(np.uint8)  # Convert to uint8 format
+            imsave(save_path, out_k_np_uint8)  # Save the image
 
             save_path = os.path.join(path_save_f, '%s_x'%imgname + '.png')
             out_x_np = torch_to_np(out_x)
             out_x_np = out_x_np.squeeze()
-            out_x_np = out_x_np[padh//2:padh//2+img_size[1], padw//2:padw//2+img_size[2]]
-            imsave(save_path, out_x_np)
+            out_x_np = out_x_np[padh//2:padh//2+img_size[1], padw//2:padw//2+img_size[2]]  # Crop the image
+            out_x_np_uint8 = np.clip(out_x_np * 255, 0, 255).astype(np.uint8)  # Convert to uint8 format
+            imsave(save_path, out_x_np_uint8)  # Save the image
+
 
             # torch.save(net, os.path.join(path_save_f, "%s_xnet.pth" % imgname))
             # torch.save(net_kernel, os.path.join(path_save_f, "%s_knet.pth" % imgname))
